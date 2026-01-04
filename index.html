@@ -3,127 +3,130 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Quest Roulette</title>
+    <title>Quest Roulette - Intuitive Flow</title>
     <style>
         :root {
-            --main-border: 2px solid #333;
+            --current-color: #d32f2f;
+            --future-color: #1976d2;
+            --past-color: #757575;
+            --bg-color: #f8f9fa;
         }
 
         body {
-            font-family: sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #f0f0f0;
+            background: var(--bg-color);
             padding: 20px;
+            color: #333;
         }
 
-        /* 入力エリアのコンテナ */
+        /* 設定エリア */
         .setup-section {
             background: white;
-            border: 1px solid #333;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            border: 2px solid #333;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
             width: 360px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .setup-title {
-            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
         }
 
-        /* 入力行のスタイル */
         .input-row {
             display: flex;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             align-items: center;
         }
 
-        /* 高さを揃えるための共通設定 */
         .name-select,
         .count-input {
             box-sizing: border-box;
-            /* 枠線を含めたサイズ計算にする */
-            height: 36px;
-            /* 高さを統一 */
+            height: 38px;
             border: 1px solid #ccc;
             font-size: 16px;
             padding: 0 10px;
         }
 
         .name-select {
-            width: 200px;
-            border-radius: 4px 0 0 4px;
-            /* 左側だけ丸く */
+            width: 180px;
+            border-radius: 8px 0 0 8px;
         }
 
         .count-input {
             width: 70px;
             border-left: none;
-            /* 境界の線を重ねない */
-            border-radius: 0 4px 4px 0;
-            /* 右側だけ丸く */
+            border-radius: 0 8px 8px 0;
             background: #fff;
         }
 
-        /* ＋ボタンの調整 */
         .add-btn {
-            margin-left: 12px;
-            width: 32px;
-            height: 32px;
+            margin-left: 10px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            border: 1px solid #999;
-            background: #fff;
+            border: none;
+            background: #333;
+            color: white;
             cursor: pointer;
             font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #333;
-            padding: 0;
         }
 
-        .add-btn:hover {
-            background: #f0f0f0;
-        }
-
-        /* --- 以下、表示系のスタイル（前回と同様） --- */
-        .display-container {
+        /* メイン表示エリア */
+        .flow-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            width: 100%;
+            gap: 5px;
         }
 
+        /* 共通カードスタイル */
         .card {
             background: white;
-            border: 1px solid #ccc;
-            width: 220px;
-            padding: 10px;
+            border-radius: 12px;
+            padding: 12px;
             text-align: center;
-            border-radius: 6px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            width: 240px;
+            border: 1px solid #ddd;
+        }
+
+        .label {
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
         }
 
         .monster-name {
             font-weight: bold;
-            font-size: 18px;
             display: block;
-            min-height: 1.2em;
-            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .img-slot {
-            width: 100px;
-            height: 60px;
-            background: #eee;
-            border: 1px dashed #ccc;
-            margin: 0 auto;
+            margin: 8px auto 0;
+            background: #f0f0f0;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         .img-slot img {
@@ -132,43 +135,106 @@
             object-fit: contain;
         }
 
-        .main-display {
-            width: 280px;
-            border: 3px solid #000;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        /* 次回 (Future) */
+        .future-card {
+            opacity: 0.5;
+            transform: scale(0.85);
+            border-left: 5px solid var(--future-color);
         }
 
-        .main-display .monster-name {
-            font-size: 26px;
-            color: #d32f2f;
+        .future-card .label {
+            color: var(--future-color);
         }
 
-        .main-display .img-slot {
-            width: 180px;
-            height: 100px;
+        .future-card .img-slot {
+            width: 80px;
+            height: 50px;
+        }
+
+        /* 今回 (Current) */
+        .current-card {
+            width: 300px;
+            border: 3px solid var(--current-color);
+            box-shadow: 0 10px 20px rgba(211, 47, 47, 0.2);
+            z-index: 10;
+            margin: 10px 0;
+        }
+
+        .current-card .label {
+            color: var(--current-color);
+            font-size: 14px;
+        }
+
+        .current-card .monster-name {
+            font-size: 28px;
+            color: #000;
+        }
+
+        .current-card .img-slot {
+            width: 200px;
+            height: 120px;
             background: #fff;
         }
 
-        .sub-display {
-            opacity: 0.6;
-            transform: scale(0.9);
+        /* 前回 (Past) */
+        .past-card {
+            opacity: 0.4;
+            transform: scale(0.8);
+            background: #eee;
+            filter: grayscale(1);
+        }
+
+        .past-card .label {
+            color: var(--past-color);
+        }
+
+        .past-card .img-slot {
+            width: 80px;
+            height: 50px;
+        }
+
+        /* 矢印アイコン */
+        .arrow {
+            font-size: 20px;
+            color: #ccc;
+            height: 20px;
+            line-height: 20px;
+            font-weight: bold;
         }
 
         .hidden {
             visibility: hidden;
             opacity: 0;
+            transform: translateY(-20px);
         }
 
+        /* ボタン */
         .next-btn {
-            border: var(--main-border);
-            width: 80px;
-            height: 80px;
-            font-size: 24px;
-            cursor: pointer;
+            margin-top: 30px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: none;
             background: #333;
             color: white;
-            margin-top: 20px;
-            border-radius: 12px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.1s, background 0.3s;
+        }
+
+        .next-btn:hover {
+            background: #000;
+        }
+
+        .next-btn:active {
+            transform: scale(0.9);
+        }
+
+        .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -189,17 +255,32 @@
         </div>
     </div>
 
-    <div class="display-container">
-        <div id="future-2" class="card sub-display hidden"><span class="monster-name">---</span>
+    <div class="flow-container">
+        <div id="future-2" class="card future-card hidden">
+            <div class="label">FUTURE +2</div>
+            <span class="monster-name">---</span>
             <div class="img-slot"><img src=""></div>
         </div>
-        <div id="future-1" class="card sub-display hidden"><span class="monster-name">---</span>
+
+        <div id="future-1" class="card future-card hidden">
+            <div class="label">NEXT</div>
+            <span class="monster-name">---</span>
             <div class="img-slot"><img src=""></div>
         </div>
-        <div id="current" class="card main-display"><span class="monster-name">待機中</span>
+
+        <div class="arrow">↓</div>
+
+        <div id="current" class="card current-card">
+            <div class="label">CURRENT</div>
+            <span class="monster-name">待機中</span>
             <div class="img-slot"><img src=""></div>
         </div>
-        <div id="past-1" class="card sub-display hidden"><span class="monster-name">---</span>
+
+        <div class="arrow">↓</div>
+
+        <div id="past-1" class="card past-card hidden">
+            <div class="label">PREVIOUS</div>
+            <span class="monster-name">---</span>
             <div class="img-slot"><img src=""></div>
         </div>
     </div>
@@ -207,7 +288,6 @@
     <button class="next-btn" id="spin-button" onclick="handleNextClick()">次</button>
 
     <script>
-        // ※ロジック部分は前回と同じものをそのまま使用できます
         let questQueue = [];
         let pastQuest = null;
         let isStarted = false;
@@ -251,7 +331,7 @@
         function handleNextClick() {
             if (!isStarted) {
                 const q0 = getAndConsumeQuest();
-                if (!q0) { alert("数値を入力してください"); return; }
+                if (!q0) { alert("回数を入力してください"); return; }
                 isStarted = true;
                 questQueue = [q0, getAndConsumeQuest(), getAndConsumeQuest()];
             } else {
@@ -264,7 +344,7 @@
             updateCard('future-1', questQueue[1]);
             updateCard('future-2', questQueue[2]);
             if (!questQueue[0]) {
-                document.getElementById('current').querySelector('.monster-name').innerText = "全クエ終了！";
+                document.getElementById('current').querySelector('.monster-name').innerText = "FINISH!";
                 document.getElementById('spin-button').disabled = true;
             }
         }
