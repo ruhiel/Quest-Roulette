@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quest Roulette</title>
+    <style>
+        :root {
+            --main-border: 2px solid #333;
+        }
+
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+
+        /* 入力エリアのコンテナ */
+        .setup-section {
+            background: white;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            width: 360px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .setup-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        /* 入力行のスタイル */
+        .input-row {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        /* 高さを揃えるための共通設定 */
+        .name-select,
+        .count-input {
+            box-sizing: border-box;
+            /* 枠線を含めたサイズ計算にする */
+            height: 36px;
+            /* 高さを統一 */
+            border: 1px solid #ccc;
+            font-size: 16px;
+            padding: 0 10px;
+        }
+
+        .name-select {
+            width: 200px;
+            border-radius: 4px 0 0 4px;
+            /* 左側だけ丸く */
+        }
+
+        .count-input {
+            width: 70px;
+            border-left: none;
+            /* 境界の線を重ねない */
+            border-radius: 0 4px 4px 0;
+            /* 右側だけ丸く */
+            background: #fff;
+        }
+
+        /* ＋ボタンの調整 */
+        .add-btn {
+            margin-left: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #999;
+            background: #fff;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            padding: 0;
+        }
+
+        .add-btn:hover {
+            background: #f0f0f0;
+        }
+
+        /* --- 以下、表示系のスタイル（前回と同様） --- */
+        .display-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #ccc;
+            width: 220px;
+            padding: 10px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .monster-name {
+            font-weight: bold;
+            font-size: 18px;
+            display: block;
+            min-height: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .img-slot {
+            width: 100px;
+            height: 60px;
+            background: #eee;
+            border: 1px dashed #ccc;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .img-slot img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .main-display {
+            width: 280px;
+            border: 3px solid #000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-display .monster-name {
+            font-size: 26px;
+            color: #d32f2f;
+        }
+
+        .main-display .img-slot {
+            width: 180px;
+            height: 100px;
+            background: #fff;
+        }
+
+        .sub-display {
+            opacity: 0.6;
+            transform: scale(0.9);
+        }
+
+        .hidden {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .next-btn {
+            border: var(--main-border);
+            width: 80px;
+            height: 80px;
+            font-size: 24px;
+            cursor: pointer;
+            background: #333;
+            color: white;
+            margin-top: 20px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="setup-section">
+        <div class="setup-title">クエスト設定</div>
+        <div id="inputs-container">
+            <div class="input-row">
+                <select class="name-select">
+                    <option value="レダウ">レダウ</option>
+                    <option value="ラギア">ラギア</option>
+                </select>
+                <input type="number" class="count-input" value="0">
+                <button class="add-btn" onclick="addNewRow()">＋</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="display-container">
+        <div id="future-2" class="card sub-display hidden"><span class="monster-name">---</span>
+            <div class="img-slot"><img src=""></div>
+        </div>
+        <div id="future-1" class="card sub-display hidden"><span class="monster-name">---</span>
+            <div class="img-slot"><img src=""></div>
+        </div>
+        <div id="current" class="card main-display"><span class="monster-name">待機中</span>
+            <div class="img-slot"><img src=""></div>
+        </div>
+        <div id="past-1" class="card sub-display hidden"><span class="monster-name">---</span>
+            <div class="img-slot"><img src=""></div>
+        </div>
+    </div>
+
+    <button class="next-btn" id="spin-button" onclick="handleNextClick()">次</button>
+
+    <script>
+        // ※ロジック部分は前回と同じものをそのまま使用できます
+        let questQueue = [];
+        let pastQuest = null;
+        let isStarted = false;
+        const imageMap = { "レダウ": "img/redau.png.jpg", "ラギア": "img/GWIbuUXasAArJKh.png" };
+
+        function addNewRow() {
+            const container = document.getElementById('inputs-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'input-row';
+            newRow.innerHTML = `<select class="name-select"><option value="レダウ">レダウ</option><option value="ラギア">ラギア</option></select><input type="number" class="count-input" value="0">`;
+            container.appendChild(newRow);
+        }
+
+        function getAndConsumeQuest() {
+            const rows = document.querySelectorAll('.input-row');
+            let pool = [];
+            rows.forEach((row, index) => {
+                const select = row.querySelector('.name-select');
+                const countInput = row.querySelector('.count-input');
+                const count = parseInt(countInput.value);
+                if (select.value && count > 0) {
+                    for (let i = 0; i < count; i++) pool.push({ name: select.value, inputIndex: index });
+                }
+            });
+            if (pool.length === 0) return null;
+            const selected = pool[Math.floor(Math.random() * pool.length)];
+            const targetInput = rows[selected.inputIndex].querySelector('.count-input');
+            targetInput.value = parseInt(targetInput.value) - 1;
+            return { name: selected.name, img: imageMap[selected.name] || "" };
+        }
+
+        function updateCard(id, data) {
+            const card = document.getElementById(id);
+            if (!data) { card.classList.add('hidden'); return; }
+            card.classList.remove('hidden');
+            card.querySelector('.monster-name').innerText = data.name;
+            const imgTag = card.querySelector('img');
+            if (data.img) { imgTag.src = data.img; imgTag.style.display = "block"; } else { imgTag.style.display = "none"; }
+        }
+
+        function handleNextClick() {
+            if (!isStarted) {
+                const q0 = getAndConsumeQuest();
+                if (!q0) { alert("数値を入力してください"); return; }
+                isStarted = true;
+                questQueue = [q0, getAndConsumeQuest(), getAndConsumeQuest()];
+            } else {
+                pastQuest = questQueue[0];
+                questQueue.shift();
+                questQueue.push(getAndConsumeQuest());
+            }
+            updateCard('past-1', pastQuest);
+            updateCard('current', questQueue[0]);
+            updateCard('future-1', questQueue[1]);
+            updateCard('future-2', questQueue[2]);
+            if (!questQueue[0]) {
+                document.getElementById('current').querySelector('.monster-name').innerText = "全クエ終了！";
+                document.getElementById('spin-button').disabled = true;
+            }
+        }
+    </script>
+</body>
+
+</html>
