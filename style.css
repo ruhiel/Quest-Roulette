@@ -1,0 +1,231 @@
+:root {
+    --current-color: #d32f2f;
+    --future-color: #1976d2;
+    --past-color: #757575;
+    --bg-color: #f8f9fa;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-color);
+    padding: 20px;
+    color: #333;
+}
+
+/* 設定エリア */
+.setup-section {
+    background: white;
+    border: 2px solid #333;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    width: 360px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.setup-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+}
+
+.input-row {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.name-select,
+.count-input {
+    box-sizing: border-box;
+    height: 38px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.name-select {
+    width: 180px;
+    border-radius: 8px 0 0 8px;
+}
+
+.count-input {
+    width: 70px;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    background: #fff;
+}
+
+.add-btn {
+    margin-left: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* メイン表示エリア */
+.flow-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+
+/* 共通カードスタイル */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    width: 240px;
+    border: 1px solid #ddd;
+}
+
+.label {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.monster-name {
+    font-weight: bold;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.img-slot {
+    margin: 8px auto 0;
+    background: #f0f0f0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.img-slot img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* 次回 (Future) */
+.future-card {
+    opacity: 0.5;
+    transform: scale(0.85);
+    border-left: 5px solid var(--future-color);
+}
+
+.future-card .label {
+    color: var(--future-color);
+}
+
+.future-card .img-slot {
+    width: 80px;
+    height: 50px;
+}
+
+/* 今回 (Current) */
+.current-card {
+    width: 300px;
+    border: 3px solid var(--current-color);
+    box-shadow: 0 10px 20px rgba(211, 47, 47, 0.2);
+    z-index: 10;
+    margin: 10px 0;
+}
+
+.current-card .label {
+    color: var(--current-color);
+    font-size: 14px;
+}
+
+.current-card .monster-name {
+    font-size: 28px;
+    color: #000;
+}
+
+.current-card .img-slot {
+    width: 200px;
+    height: 120px;
+    background: #fff;
+}
+
+/* 前回 (Past) */
+.past-card {
+    opacity: 0.4;
+    transform: scale(0.8);
+    background: #eee;
+    filter: grayscale(1);
+}
+
+.past-card .label {
+    color: var(--past-color);
+}
+
+.past-card .img-slot {
+    width: 80px;
+    height: 50px;
+}
+
+/* 矢印アイコン */
+.arrow {
+    font-size: 20px;
+    color: #ccc;
+    height: 20px;
+    line-height: 20px;
+    font-weight: bold;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+/* ボタン */
+.next-btn {
+    margin-top: 30px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: none;
+    background: #333;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.1s, background 0.3s;
+}
+
+.next-btn:hover {
+    background: #000;
+}
+
+.next-btn:active {
+    transform: scale(0.9);
+}
+
+.next-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
