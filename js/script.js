@@ -7,7 +7,7 @@ function addNewRow() {
     const container = document.getElementById('inputs-container');
     const newRow = document.createElement('div');
     newRow.className = 'input-row';
-    newRow.innerHTML = `<select class="name-select"><option value="レ・ダウ">レ・ダウ</option><option value="ラギアクルス">ラギアクルス</option><option value="アルシュベルド">アルシュベルド</option><option value="セルレギオス">セルレギオス</option><option value="ウズ・トゥナ">ウズ・トゥナ</option></select><input type="number" class="count-input" value="0">`;
+    newRow.innerHTML = `<select class="name-select"><option value="レ・ダウ">レ・ダウ</option><option value="ラギアクルス">ラギアクルス</option><option value="アルシュベルド">アルシュベルド</option><option value="セルレギオス">セルレギオス</option><option value="ウズ・トゥナ">ウズ・トゥナ</option></select><input type="number" class="count-input" value="1" min="1">`;
     container.appendChild(newRow);
 }
 

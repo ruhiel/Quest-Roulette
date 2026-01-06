@@ -229,3 +229,45 @@ body {
     background: #ccc;
     cursor: not-allowed;
 }
+
+/* 親要素：カードを中央に置くための基準点 */
+.current-wrapper {
+    position: relative;
+    /* ボタンの配置基準にする */
+    display: flex;
+    justify-content: center;
+    /* カードを常に中央に配置 */
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+    /* 上下の矢印との間隔 */
+}
+
+/* カード自体のスタイル（既存のものがある場合は調整） */
+.current-card {
+    z-index: 1;
+    /* ボタンより背面に隠れないように */
+}
+
+/* ボタンを右側に浮かせる */
+.next-btn {
+    position: absolute;
+    left: calc(50% + 180px);
+    /* カードの中心(50%) + カードの幅の半分強(180px) */
+
+    /* ボタンの見た目（お好みで調整してください） */
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s;
+}
+
+.next-btn:active {
+    transform: scale(0.95);
+}
