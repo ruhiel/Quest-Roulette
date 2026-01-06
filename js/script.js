@@ -1,13 +1,13 @@
 let questQueue = [];
 let pastQuest = null;
 let isStarted = false;
-const imageMap = { "レダウ": "img/redau.png.jpg", "ラギア": "img/GWIbuUXasAArJKh.png" };
+const imageMap = { "レ・ダウ": "img/レ・ダウ.png", "ラギアクルス": "img/ラギアクルス.png", "アルシュベルド": "img/アルシュベルド.png", "セルレギオス": "img/セルレギオス.png", "ウズ・トゥナ": "img/ウズ・トゥナ.png" };
 
 function addNewRow() {
     const container = document.getElementById('inputs-container');
     const newRow = document.createElement('div');
     newRow.className = 'input-row';
-    newRow.innerHTML = `<select class="name-select"><option value="レダウ">レダウ</option><option value="ラギア">ラギア</option></select><input type="number" class="count-input" value="0">`;
+    newRow.innerHTML = `<select class="name-select"><option value="レ・ダウ">レ・ダウ</option><option value="ラギアクルス">ラギアクルス</option><option value="アルシュベルド">アルシュベルド</option><option value="セルレギオス">セルレギオス</option><option value="ウズ・トゥナ">ウズ・トゥナ</option></select><input type="number" class="count-input" value="0">`;
     container.appendChild(newRow);
 }
 
